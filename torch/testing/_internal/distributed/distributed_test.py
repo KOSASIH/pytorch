@@ -330,7 +330,10 @@ class TestDistBackend(MultiProcessTestCase):
     def setUpClass(cls):
         os.environ["MASTER_ADDR"] = str(MASTER_ADDR)
         os.environ["MASTER_PORT"] = str(MASTER_PORT)
-        # os.environ["WORLD_SIZE"] = str(WORLD_SIZE)
+        # NCCL_BLOCKING_WAIT overrides NCCL_ASYNC_ERROR_HANDLING hence tests
+        # such as test_batch_isend_irecv_nccl will test NCCL_BLOCKING_WAIT as
+        # expected.
+        os.environ["NCCL_ASYNC_ERROR_HANDLING"] = "1"
         super().setUpClass()
 
     def setUp(self):
